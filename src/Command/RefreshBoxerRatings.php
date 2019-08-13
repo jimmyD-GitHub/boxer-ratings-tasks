@@ -30,6 +30,9 @@ class RefreshBoxerRatings extends Command
         parent::__construct();
     }
 
+    /**
+     * @return void
+     */
     protected function configure(): void
     {
         $this->setDescription('Refreshes the boxer ratings for each division.');

@@ -23,6 +23,6 @@ class RefreshBoxerRatings extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $output->writeln('TODO: Implement boxer ratings refresh.');
+        $output->writeln('<info>TODO: Implement boxer ratings refresh.</info>');
     }
 }

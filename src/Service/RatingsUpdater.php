@@ -2,12 +2,23 @@
 
 namespace App\Service;
 
-use Doctrine\DBAL\Driver\Connection;
+use Exception;
+use App\Entity\Division;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\ConnectionException;
 
 class RatingsUpdater
 {
     /** @var Connection */
     private $connection;
+
+    /** @var int */
+    private $multiplier = 3;
+
+    /** @var int */
+    private $maxRated = 10;
 
     /**
      * @param Connection $connection
@@ -18,11 +29,106 @@ class RatingsUpdater
     }
 
     /**
-     * @param int $divisionId
+     * @param Division $division
      * @return bool
+     * @throws ServiceException
      */
-    public function update(int $divisionId): bool
+    public function update(Division $division): bool
     {
-        return true;
+        $rating = 1;
+        $updated = false;
+        $boxerIds = [];
+        $tableName = $division->getTableName();
+
+        try {
+
+            $ratings = $this->calculateRatings($tableName);
+
+            if (empty($ratings)) {
+                return $updated;
+            }
+
+            $this->connection->beginTransaction();
+
+            foreach ($ratings as $boxer) {
+                $boxer['rating'] = $rating;
+                $boxerIds[] = (int)$boxer['boxerId'];
+                $updated = $this->updateRatings($boxer, $division);
+                $rating++;
+            }
+
+            $this->cleanupRatings($boxerIds);
+            $this->connection->commit();
+
+        } catch (Exception $exception) {
+
+            try {
+                $this->connection->rollBack();
+            } catch (ConnectionException $exception) {
+                throw new ServiceException($exception->getMessage());
+            }
+
+            throw new ServiceException($exception->getMessage());
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @param string $tableName
+     * @return array
+     * @throws DBALException
+     */
+    private function calculateRatings(string $tableName): array
+    {
+        $query = $this->connection->createQueryBuilder();
+
+        $query->select('boxer_id AS boxerId', "SUM((11 - rating) * $this->multiplier) AS points")
+            ->from($tableName)
+            ->groupBy('boxer_id')
+            ->addOrderBy('points', 'DESC')
+            ->setMaxResults($this->maxRated);
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @param array $boxer
+     * @param Division $division
+     * @return bool
+     * @throws DBALException
+     */
+    private function updateRatings(array $boxer, Division $division): bool
+    {
+        $update = 'INSERT INTO `rating` (`division_id`, `boxer_id`, `rating`, `points`) ' .
+            'VALUES (:divisionId, :boxerId, :rating, :points) ' .
+            'ON DUPLICATE KEY UPDATE `rating` = :rating, `points` = :points';
+
+        $stmt = $this->connection->prepare($update);
+
+        $stmt->bindValue('divisionId', $division->getId(), ParameterType::INTEGER);
+        $stmt->bindValue('boxerId', (int)$boxer['boxerId'], ParameterType::INTEGER);
+        $stmt->bindValue('rating', (int)$boxer['rating'], ParameterType::INTEGER);
+        $stmt->bindValue('points', (int)$boxer['points'], ParameterType::INTEGER);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * @param array $boxerIds
+     * @return bool
+     * @throws DBALException
+     */
+    private function cleanupRatings(array $boxerIds): bool
+    {
+        $delete = 'DELETE FROM `rating` WHERE `boxer_id` NOT IN (?)';
+
+        return (bool)$this->connection->executeUpdate($delete,
+            array($boxerIds),
+            array(Connection::PARAM_INT_ARRAY)
+        );
     }
 }

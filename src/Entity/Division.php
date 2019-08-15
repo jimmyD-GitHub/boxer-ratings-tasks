@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use InvalidArgumentException;
+
 class Division
 {
     public const OPTIONS = [
@@ -21,8 +23,7 @@ class Division
         14 => 'super-flyweight',
         15 => 'flyweight',
         16 => 'light-flyweight',
-        17 => 'minimumweight',
-        18 => 'light-minimumweight'
+        17 => 'minimumweight'
     ];
 
     /** @var string */
@@ -34,6 +35,11 @@ class Division
     public function __construct(string $division)
     {
         $division = strtolower($division);
+
+        if (!in_array($division, self::OPTIONS, true)) {
+            throw new InvalidArgumentException("Invalid division name: $division");
+        }
+
         $this->division = $division;
     }
 
@@ -43,6 +49,14 @@ class Division
     public function __toString(): string
     {
         return $this->division;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return str_replace('-', '', $this->division) . '_user_rating';
     }
 
     /**

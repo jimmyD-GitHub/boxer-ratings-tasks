@@ -39,6 +39,7 @@ class RatingsUpdater
         $updated = false;
         $boxerIds = [];
         $tableName = $division->getTableName();
+        $divisionId = $division->getId();
 
         try {
 
@@ -53,11 +54,11 @@ class RatingsUpdater
             foreach ($ratings as $boxer) {
                 $boxer['rating'] = $rating;
                 $boxerIds[] = (int)$boxer['boxerId'];
-                $updated = $this->updateRatings($boxer, $division);
+                $updated = $this->updateRatings($boxer, $divisionId);
                 $rating++;
             }
 
-            $this->cleanupRatings($boxerIds);
+            $this->cleanupRatings($boxerIds, $divisionId);
             $this->connection->commit();
 
         } catch (Exception $exception) {
@@ -97,11 +98,11 @@ class RatingsUpdater
 
     /**
      * @param array $boxer
-     * @param Division $division
+     * @param int $divisionId
      * @return bool
      * @throws DBALException
      */
-    private function updateRatings(array $boxer, Division $division): bool
+    private function updateRatings(array $boxer, int $divisionId): bool
     {
         $update = 'INSERT INTO `rating` (`division_id`, `boxer_id`, `rating`, `points`) ' .
             'VALUES (:divisionId, :boxerId, :rating, :points) ' .
@@ -109,7 +110,7 @@ class RatingsUpdater
 
         $stmt = $this->connection->prepare($update);
 
-        $stmt->bindValue('divisionId', $division->getId(), ParameterType::INTEGER);
+        $stmt->bindValue('divisionId', $divisionId, ParameterType::INTEGER);
         $stmt->bindValue('boxerId', (int)$boxer['boxerId'], ParameterType::INTEGER);
         $stmt->bindValue('rating', (int)$boxer['rating'], ParameterType::INTEGER);
         $stmt->bindValue('points', (int)$boxer['points'], ParameterType::INTEGER);
@@ -119,16 +120,17 @@ class RatingsUpdater
 
     /**
      * @param array $boxerIds
+     * @param int $divisionId
      * @return bool
      * @throws DBALException
      */
-    private function cleanupRatings(array $boxerIds): bool
+    private function cleanupRatings(array $boxerIds, int $divisionId): bool
     {
-        $delete = 'DELETE FROM `rating` WHERE `boxer_id` NOT IN (?)';
+        $delete = 'DELETE FROM `rating` WHERE `boxer_id` NOT IN (?) AND `division_id` = ?';
 
         return (bool)$this->connection->executeUpdate($delete,
-            array($boxerIds),
-            array(Connection::PARAM_INT_ARRAY)
+            array($boxerIds, $divisionId),
+            array(Connection::PARAM_INT_ARRAY, ParameterType::INTEGER)
         );
     }
 }

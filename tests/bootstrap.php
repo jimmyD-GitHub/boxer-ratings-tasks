@@ -9,4 +9,13 @@ if (isset($_ENV['BOOTSTRAP_CLEAR_CACHE_ENV'])) {
     ));
 }
 
+print 'Loading DB test data fixtures...' . PHP_EOL;
+
+passthru(sprintf(
+    'php "%s/../bin/console" doctrine:fixtures:load --no-interaction',
+    __DIR__
+));
+
+print PHP_EOL;
+
 require __DIR__.'/../config/bootstrap.php';

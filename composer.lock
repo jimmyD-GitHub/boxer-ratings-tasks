@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "dc2c32f5334a4d1f4336ba87d39f78ca",
@@ -3475,16 +3475,16 @@
         },
         {
             "name": "jimmyd-github/boxer-ratings-mysql",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jimmyD-GitHub/boxer-ratings-mysql.git",
-                "reference": "b2b94f2c1aa347065ea5d19f094da07e11e1f6bf"
+                "reference": "b12c82062a87fdc55b3eb42d2461889be98e9b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jimmyD-GitHub/boxer-ratings-mysql/zipball/b2b94f2c1aa347065ea5d19f094da07e11e1f6bf",
-                "reference": "b2b94f2c1aa347065ea5d19f094da07e11e1f6bf",
+                "url": "https://api.github.com/repos/jimmyD-GitHub/boxer-ratings-mysql/zipball/b12c82062a87fdc55b3eb42d2461889be98e9b27",
+                "reference": "b12c82062a87fdc55b3eb42d2461889be98e9b27",
                 "shasum": ""
             },
             "require-dev": {
@@ -3493,10 +3493,10 @@
             "type": "library",
             "description": "Library to share schema data and MySQL container between projects.",
             "support": {
-                "source": "https://github.com/jimmyD-GitHub/boxer-ratings-mysql/tree/1.0.2",
+                "source": "https://github.com/jimmyD-GitHub/boxer-ratings-mysql/tree/1.0.3",
                 "issues": "https://github.com/jimmyD-GitHub/boxer-ratings-mysql/issues"
             },
-            "time": "2019-08-09T13:35:04+00:00"
+            "time": "2019-08-22T10:33:11+00:00"
         },
         {
             "name": "roave/security-advisories",

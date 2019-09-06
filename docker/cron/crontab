@@ -1,0 +1,1 @@
+* * * * * root /usr/local/bin/php /var/www/boxer-ratings-tasks/bin/console app:refresh-ratings > /var/log/cron/refresh-ratings.log 2>&1

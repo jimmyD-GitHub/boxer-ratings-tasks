@@ -1,0 +1,23 @@
+# Docker compose used for development environment only.
+
+version: '3.2'
+
+services:
+
+  db:
+    image: jimmydockerhub/boxer-ratings-mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_USER: root
+
+  tasks:
+    image: jimmydockerhub/boxer-ratings-tasks:latest
+    container_name: tasks
+    restart: always
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile

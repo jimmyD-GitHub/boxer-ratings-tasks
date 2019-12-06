@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Integration\Service;
 
 use App\Entity\Division;
 use App\Service\RatingsUpdater;
@@ -34,25 +34,25 @@ class RatingsUpdaterTest extends TestCase
         );
 
         $ratings = $this->connection->fetchAll(
-            'SELECT * FROM `rating` ORDER BY `points` DESC'
+            'SELECT * FROM `rating` ORDER BY `division_id`, `points` DESC'
         );
 
         $this->assertEquals([
             0 => [
                 'division_id' => '1',
-                'boxer_id' => '8',
+                'boxer_id' => '1002',
                 'rating' => '1',
                 'points' => '60'
             ],
             1 => [
                 'division_id' => '1',
-                'boxer_id' => '2',
+                'boxer_id' => '999',
                 'rating' => '2',
                 'points' => '54'
             ],
             2 => [
                 'division_id' => '1',
-                'boxer_id' => '1',
+                'boxer_id' => '1000',
                 'rating' => '3',
                 'points' => '48'
             ]

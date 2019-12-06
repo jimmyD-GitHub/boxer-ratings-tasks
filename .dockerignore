@@ -1,0 +1,5 @@
+.idea
+.dockerignore
+vendor
+README.md
+*/.git/*

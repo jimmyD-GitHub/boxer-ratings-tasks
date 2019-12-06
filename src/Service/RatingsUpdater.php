@@ -46,7 +46,7 @@ class RatingsUpdater
             $ratings = $this->calculateRatings($tableName);
 
             if (empty($ratings)) {
-                return $updated;
+                return $this->dropRatings($divisionId);
             }
 
             $this->connection->beginTransaction();
@@ -129,8 +129,20 @@ class RatingsUpdater
         $delete = 'DELETE FROM `rating` WHERE `boxer_id` NOT IN (?) AND `division_id` = ?';
 
         return (bool)$this->connection->executeUpdate($delete,
-            array($boxerIds, $divisionId),
-            array(Connection::PARAM_INT_ARRAY, ParameterType::INTEGER)
+            [$boxerIds, $divisionId],
+            [Connection::PARAM_INT_ARRAY, ParameterType::INTEGER]
         );
+    }
+
+    /**
+     * @param int $divisionId
+     * @return bool
+     * @throws DBALException
+     */
+    private function dropRatings(int $divisionId): bool
+    {
+        $delete = 'DELETE FROM `rating` WHERE `division_id` = ?';
+
+        return (bool)$this->connection->executeUpdate($delete, [$divisionId]);
     }
 }

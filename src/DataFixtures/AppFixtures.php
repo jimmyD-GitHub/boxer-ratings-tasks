@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
 
         $finder = new Finder();
         $finder->in(__DIR__ . '/../../vendor/jimmyd-github/boxer-ratings-mysql/schema')
-            ->name(['boxers.sql', 'data.sql'])
+            ->name(['boxers.sql', 'testData.sql'])
             ->sortByName()
             ->files();
 

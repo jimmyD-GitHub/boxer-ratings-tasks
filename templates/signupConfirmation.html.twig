@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Signup Confirmation{% endblock %}
+
+{% block content %}
+    <tr>
+        <td class="wrapper">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <p>Hi {{ name }},</p>
+                        <p>Thanks for signing up to BoxerRatings.com. Please click the button below to confirm
+                            your email address.</p>
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+                            <tbody>
+                            <tr>
+                                <td align="left">
+                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="{{ url }}" target="_blank">
+                                                    Confirm Sign Up
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p>Once your account is activated you can log into create your own divisonal ratings.</p>
+                        <p>Cheers, <br>BoxerRatings.com</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock %}

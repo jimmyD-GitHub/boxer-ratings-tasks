@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Command;
+namespace App\Tests\Integration\Command;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -26,7 +26,7 @@ class RefreshBoxerRatingsTest extends KernelTestCase
         $this->assertContains('No ratings updated for the cruiserweight division!', $output);
         $this->assertContains('No ratings updated for the light-heavyweight division!', $output);
         $this->assertContains('No ratings updated for the super-middleweight division!', $output);
-        $this->assertContains('No ratings updated for the middleweight division!', $output);
+        $this->assertContains('Finished updating boxer ratings for the middleweight division.', $output);
         $this->assertContains('No ratings updated for the light-middleweight division!', $output);
         $this->assertContains('No ratings updated for the welterweight division!', $output);
         $this->assertContains('No ratings updated for the light-welterweight division!', $output);

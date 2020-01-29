@@ -40,5 +40,6 @@ RUN composer install --no-interaction
 ADD docker/cron/crontab /etc/cron.d/ansible-pull
 RUN chmod 0600 /etc/cron.d/ansible-pull
 RUN mkdir /var/log/cron
+RUN service cron stop
 
 CMD ["/init"]

@@ -1,4 +1,4 @@
-FROM php:7.3
+FROM php:7.3-cli
 MAINTAINER Jimmy Dixon <jamesalandixon@gmail.com>
 
 LABEL Description = "Scheduled tasks used to facilitate boxeratings.com functionality."
@@ -35,6 +35,10 @@ RUN touch /var/log/boxer-ratings-tasks.log
 
 #Composer
 RUN composer install --no-interaction
+
+COPY docker/docker-php-entrypoint /usr/local/bin/
+RUN ln -s /usr/local/bin/docker-php-entrypoint / # backwards compat
+RUN chmod +x /usr/local/bin/docker-php-entrypoint
 
 #Crontab
 ADD docker/cron/crontab /etc/cron.d/ansible-pull

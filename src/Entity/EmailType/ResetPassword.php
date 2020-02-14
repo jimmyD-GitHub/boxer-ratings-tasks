@@ -36,6 +36,6 @@ class ResetPassword extends AbstractEmailType
      */
     public function getLinkUrl(): string
     {
-        return $this->getBaseUrl() . '/verify-email/' . urlencode($this->getToken());
+        return $this->getBaseUrl() . '/reset-password/' . urlencode($this->getToken());
     }
 }

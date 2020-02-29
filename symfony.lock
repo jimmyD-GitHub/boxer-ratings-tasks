@@ -1,4 +1,10 @@
 {
+    "aws/aws-sdk-php": {
+        "version": "3.133.26"
+    },
+    "bref/bref": {
+        "version": "0.5.15"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -93,11 +99,29 @@
     "egulias/email-validator": {
         "version": "2.1.11"
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.2"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.6.1"
+    },
+    "hollodotme/fast-cgi-client": {
+        "version": "v3.0.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
     "jimmyd-github/boxer-ratings-mysql": {
-        "version": "1.0.2"
+        "version": "1.1.7"
+    },
+    "mnapoli/silly": {
+        "version": "1.7.2"
+    },
+    "mtdowling/jmespath.php": {
+        "version": "2.5.0"
     },
     "nikic/php-parser": {
         "version": "v4.3.0"
@@ -111,17 +135,44 @@
     "php": {
         "version": "7.3"
     },
+    "php-di/invoker": {
+        "version": "2.0.0"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/event-dispatcher": {
+        "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
+    "psr/http-server-handler": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.1.0"
     },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
+    "riverline/multipart-parser": {
+        "version": "2.0.8"
+    },
     "roave/security-advisories": {
         "version": "dev-master"
+    },
+    "symfony/amazon-mailer": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "9648db3ecae5c8a6b1a5f74715d3907124348815"
+        }
     },
     "symfony/browser-kit": {
         "version": "v4.3.3"
@@ -151,9 +202,6 @@
     "symfony/css-selector": {
         "version": "v4.3.3"
     },
-    "symfony/debug": {
-        "version": "v4.3.3"
-    },
     "symfony/dependency-injection": {
         "version": "v4.3.3"
     },
@@ -165,6 +213,9 @@
     },
     "symfony/dotenv": {
         "version": "v4.3.3"
+    },
+    "symfony/error-handler": {
+        "version": "v5.0.5"
     },
     "symfony/event-dispatcher": {
         "version": "v4.3.3"
@@ -269,6 +320,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.12.0"
+    },
+    "symfony/process": {
+        "version": "v4.3.11"
     },
     "symfony/routing": {
         "version": "4.2",

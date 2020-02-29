@@ -37,9 +37,10 @@ class SendEmails extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return int
      * @throws ServiceException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->emailSender->setOutputWriter($output);
         $numSent = $this->emailSender->processQueue();
@@ -47,5 +48,7 @@ class SendEmails extends Command
         $output->writeln('<info>Finished sending emails.</info>');
         $message = "Sent a total of $numSent " . ($numSent === 1 ? 'email.' : 'emails.');
         $output->writeln("<info>$message</info>");
+
+        return 0;
     }
 }

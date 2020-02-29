@@ -33,6 +33,17 @@ Finished sending emails.
 Sent a total of 2 emails.
 ```
 
+### Send Test Email
+This command is used locally to verify the mailer configuration and check the look and feel of the HTML emails sent.
+
+The MAILER_DSN environment variable should be set using a .env.dev.local file to send test emails:
+
+```shell script
+$ php bin/console app:send-test-email test-recipient@gmail.com
+Sending test email...
+Email sent.
+```
+
 ## Configuration
 This is a symfony CLI application that requires the following environment variables:
 
@@ -94,4 +105,13 @@ OK (5 tests, 43 assertions)
 
 ## Production
 
-TODO: The plan is to use bref.
+The commands are executed using an AWS Lambda function and get run at scheduled times using Cloud Watch. This is all
+configured using the serverless.yml file with bref.
+
+In production the MAILER_DSN environment variable needs to be set for the SMTP emails, sent via Amazon SES.
+
+To do a production build and update the AWS stack do:
+
+```shell script
+$ composer app-deploy
+```

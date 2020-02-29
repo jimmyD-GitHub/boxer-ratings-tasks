@@ -1,0 +1,50 @@
+service: tasks
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: provided
+  environment:
+    # Symfony environment variables
+    APP_ENV: prod
+    APP_SECRET: ${ssm:/tasks/app-secret}
+    DATABASE_URL: ${ssm:/tasks/database-url}
+    MAILER_DSN: ${ssm:/tasks/mailer-dsn}
+    UI_BASE_URL: https://www.boxeratings.com
+
+plugins:
+  - ./vendor/bref/bref
+
+functions:
+  console:
+    handler: bin/console
+    timeout: 30 # in seconds
+    layers:
+      - ${bref:layer.php-73} # PHP
+      - ${bref:layer.console} # The "console" layer
+    events:
+      - schedule:
+          rate: rate(5 minutes)
+          input: '{"cli": "app:refresh-ratings"}'
+      - schedule:
+          rate: rate(1 minute)
+          input: '{"cli": "app:send-emails"}'
+    vpc:
+      securityGroupIds:
+        - sg-3adb9b47
+      subnetIds:
+        - subnet-718df438
+        - subnet-2540c37e
+        - subnet-061bba3a
+        - subnet-d20d83ff
+        - subnet-cc1991c0
+        - subnet-2a016e4f
+
+# Exclude files from deployment
+package:
+  exclude:
+    - 'tests/**'
+    - 'docker/**'
+    - 'bin/.phpunit/**'
+    - 'vendor/bin/.phpunit/**'
+    - 'bin/phpunit'

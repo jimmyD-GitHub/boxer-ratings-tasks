@@ -27,11 +27,6 @@ class EmailRepositoryTest extends TestCase
         $this->repository = $this->entityManager->getRepository(Email::class);
     }
 
-    public function testTheCommandSentAllTheEmails(): void
-    {
-        $this->assertEmpty($this->repository->findAllEmailsThatNeedToBeSent());
-    }
-
     public function testFindingEmails(): void
     {
         $emails = $this->repository->findBy([], ['id' => 'ASC']);
@@ -41,8 +36,8 @@ class EmailRepositoryTest extends TestCase
 
         [$email1, $email2, $email3] = $emails;
 
-        $this->assertInstanceOf('DateTime', $email1->getSentAt());
-        $this->assertInstanceOf('DateTime', $email2->getSentAt());
+        $this->assertNull($email1->getSentAt());
+        $this->assertNull($email2->getSentAt());
         $this->assertEquals('2019-11-02 01:03:45', $email3->getSentAt()->format('Y-m-d H:i:s'));
 
         $andy = $email1->getUser();

@@ -7,15 +7,15 @@ use App\Entity\EmailType\EmailTypeInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\NamedAddress;
+use Symfony\Component\Mime\Address;
 
 class MailAdapter implements MailAdapterInterface
 {
     /** @var string */
-    private const FROM_ADDRESS = 'noreply@boxeratings.com';
+    public const FROM_ADDRESS = 'admin@boxeratings.com';
 
     /** @var string */
-    private const FROM_NAME = 'BoxerRatings.com';
+    public const FROM_NAME = 'BoxerRatings.com';
 
     /** @var MailerInterface */
     private $mailer;
@@ -40,8 +40,8 @@ class MailAdapter implements MailAdapterInterface
     public function send(User $user): bool
     {
         $userName = $user->getName();
-        $toAddress = new NamedAddress($user->getEmail(), $userName);
-        $fromAddress = new NamedAddress(self::FROM_ADDRESS, self::FROM_NAME);
+        $toAddress = new Address($user->getEmail(), $userName);
+        $fromAddress = new Address(self::FROM_ADDRESS, self::FROM_NAME);
 
         $email = (new TemplatedEmail())
             ->to($toAddress)

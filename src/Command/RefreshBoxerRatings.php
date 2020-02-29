@@ -42,9 +42,10 @@ class RefreshBoxerRatings extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return int
      * @throws ServiceException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->divisions as $division) {
 
@@ -57,5 +58,7 @@ class RefreshBoxerRatings extends Command
             }
 
         }
+
+        return 0;
     }
 }

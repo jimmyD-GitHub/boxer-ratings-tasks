@@ -4,3 +4,4 @@ vendor
 README.md
 */.git/*
 .serverless/*
+.env.dev.local

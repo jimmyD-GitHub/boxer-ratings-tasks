@@ -115,3 +115,11 @@ To do a production build and update the AWS stack do:
 ```shell script
 $ composer app-deploy
 ```
+
+If your local environment has access to the required AWS credentials configuration you can executed the commands
+like this:
+
+```shell script
+$ vendor/bin/bref cli tasks-dev-console -- app:send-emails
+$ vendor/bin/bref cli tasks-dev-console -- app:refresh-ratings
+```

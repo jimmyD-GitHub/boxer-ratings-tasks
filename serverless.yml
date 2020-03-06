@@ -39,6 +39,8 @@ functions:
         - subnet-d20d83ff
         - subnet-cc1991c0
         - subnet-2a016e4f
+        - subnet-0bc753316bba99c13
+        - subnet-07fc90bac2cb90b13
 
 # Exclude files from deployment
 package:

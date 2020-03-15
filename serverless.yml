@@ -33,12 +33,6 @@ functions:
       securityGroupIds:
         - sg-3adb9b47
       subnetIds:
-        - subnet-718df438
-        - subnet-2540c37e
-        - subnet-061bba3a
-        - subnet-d20d83ff
-        - subnet-cc1991c0
-        - subnet-2a016e4f
         - subnet-0bc753316bba99c13
         - subnet-07fc90bac2cb90b13
 

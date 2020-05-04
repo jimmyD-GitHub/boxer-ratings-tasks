@@ -86,11 +86,15 @@ class RatingsUpdater
 
         $query->select('boxer_id AS boxerId', "SUM((11 - rating) * $this->multiplier) AS points")
             ->from($tableName)
+            ->where('rating <= :maxRated')
             ->groupBy('boxer_id')
             ->addOrderBy('points', 'DESC')
             ->setMaxResults($this->maxRated);
 
         $stmt = $this->connection->prepare($query);
+
+        $stmt->bindValue('maxRated', $this->maxRated, ParameterType::INTEGER);
+
         $stmt->execute();
 
         return $stmt->fetchAll();

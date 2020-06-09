@@ -84,10 +84,12 @@ class RatingsUpdater
     {
         $query = $this->connection->createQueryBuilder();
 
-        $query->select('boxer_id AS boxerId', "SUM((11 - rating) * $this->multiplier) AS points")
-            ->from($tableName)
-            ->where('rating <= :maxRated')
-            ->groupBy('boxer_id')
+        $query->select('r.boxer_id AS boxerId', "SUM((11 - r.rating) * $this->multiplier) AS points")
+            ->from($tableName, 'r')
+            ->join('r', 'boxer', 'b', 'r.boxer_id = b.id')
+            ->where('r.rating <= :maxRated')
+            ->andWhere('b.enabled = 1')
+            ->groupBy('r.boxer_id')
             ->addOrderBy('points', 'DESC')
             ->setMaxResults($this->maxRated);
 

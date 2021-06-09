@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\DBAL\Driver\Exception as DbException;
 
 class RatingsUpdater
 {
@@ -31,19 +32,18 @@ class RatingsUpdater
     /**
      * @param Division $division
      * @return bool
-     * @throws ServiceException
+     * @throws ServiceException|DbException
      */
     public function update(Division $division): bool
     {
         $rating = 1;
         $updated = false;
         $boxerIds = [];
-        $tableName = $division->getTableName();
         $divisionId = $division->getId();
 
         try {
 
-            $ratings = $this->calculateRatings($tableName);
+            $ratings = $this->calculateRatings($division);
 
             if (empty($ratings)) {
                 return $this->dropRatings($divisionId);
@@ -76,12 +76,14 @@ class RatingsUpdater
     }
 
     /**
-     * @param string $tableName
+     * @param Division $division
      * @return array
-     * @throws DBALException
+     * @throws DbException
+     * @throws \Doctrine\DBAL\Exception
      */
-    private function calculateRatings(string $tableName): array
+    private function calculateRatings(Division $division): array
     {
+        $tableName = $division->getTableName();
         $query = $this->connection->createQueryBuilder();
 
         $query->select('r.boxer_id AS boxerId', "SUM((11 - r.rating) * $this->multiplier) AS points")
@@ -89,6 +91,7 @@ class RatingsUpdater
             ->join('r', 'boxer', 'b', 'r.boxer_id = b.id')
             ->where('r.rating <= :maxRated')
             ->andWhere('b.enabled = 1')
+            ->andWhere('b.division_id = :divisionId')
             ->groupBy('r.boxer_id')
             ->addOrderBy('points', 'DESC')
             ->setMaxResults($this->maxRated);
@@ -96,6 +99,7 @@ class RatingsUpdater
         $stmt = $this->connection->prepare($query);
 
         $stmt->bindValue('maxRated', $this->maxRated, ParameterType::INTEGER);
+        $stmt->bindValue('divisionId', $division->getId(), ParameterType::INTEGER);
 
         $stmt->execute();
 
@@ -106,7 +110,7 @@ class RatingsUpdater
      * @param array $boxer
      * @param int $divisionId
      * @return bool
-     * @throws DBALException
+     * @throws DBALException|DbException
      */
     private function updateRatings(array $boxer, int $divisionId): bool
     {

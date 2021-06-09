@@ -82,7 +82,7 @@ $ docker push jimmydockerhub/boxer-ratings-tasks:latest
 ## Tests
 
 ```shell script
-$ php bin/phpunit
+$ vendor/bin/phpunit
 
  // Clearing the cache for the test environment with debug true
 

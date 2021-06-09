@@ -22,9 +22,9 @@ class SendEmailsTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains('Sending signupConfirmation email to billy-test@gmail.com', $output);
-        $this->assertContains('Sending resetPassword email to andy-test@gmail.com', $output);
-        $this->assertContains('Finished sending emails.', $output);
-        $this->assertContains('Sent a total of 0 emails.', $output);
+        $this->assertStringContainsString('Sending signupConfirmation email to billy-test@gmail.com', $output);
+        $this->assertStringContainsString('Sending resetPassword email to andy-test@gmail.com', $output);
+        $this->assertStringContainsString('Finished sending emails.', $output);
+        $this->assertStringContainsString('Sent a total of 0 emails.', $output);
     }
 }

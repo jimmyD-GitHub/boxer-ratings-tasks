@@ -4,8 +4,8 @@ namespace App\DataFixtures;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\DBALException;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\DBAL\Exception as DBALException;
 use Symfony\Component\Finder\Finder;
 
 class AppFixtures extends Fixture
@@ -23,6 +23,7 @@ class AppFixtures extends Fixture
 
     /**
      * @param ObjectManager $manager
+     * @return void
      * @throws DBALException
      */
     public function load(ObjectManager $manager): void
@@ -37,7 +38,7 @@ class AppFixtures extends Fixture
 
         foreach ($finder as $file) {
             $sql = $file->getContents();
-            $this->connection->exec($sql);
+            $this->connection->executeStatement($sql);
         }
 
         $manager->flush();

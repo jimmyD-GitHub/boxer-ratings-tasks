@@ -2,11 +2,13 @@
 
 namespace App\Service;
 
+use DateTime;
 use Exception;
+use DateTimeZone;
 use App\Entity\Division;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\DBAL\Driver\Exception as DbException;
 
@@ -79,7 +81,8 @@ class RatingsUpdater
      * @param Division $division
      * @return array
      * @throws DbException
-     * @throws \Doctrine\DBAL\Exception
+     * @throws DBALException
+     * @throws Exception
      */
     private function calculateRatings(Division $division): array
     {
@@ -89,9 +92,12 @@ class RatingsUpdater
         $query->select('r.boxer_id AS boxerId', "SUM((11 - r.rating) * $this->multiplier) AS points")
             ->from($tableName, 'r')
             ->join('r', 'boxer', 'b', 'r.boxer_id = b.id')
+            ->join('r', 'rating_update', 'ru',
+                'r.user_id = ru.user_id AND ru.division_id = :divisionId')
             ->where('r.rating <= :maxRated')
             ->andWhere('b.enabled = 1')
             ->andWhere('b.division_id = :divisionId')
+            ->andWhere('ru.updated_at > :lastUpdated')
             ->groupBy('r.boxer_id')
             ->addOrderBy('points', 'DESC')
             ->setMaxResults($this->maxRated);
@@ -101,9 +107,12 @@ class RatingsUpdater
         $stmt->bindValue('maxRated', $this->maxRated, ParameterType::INTEGER);
         $stmt->bindValue('divisionId', $division->getId(), ParameterType::INTEGER);
 
-        $stmt->execute();
+        $lastUpdated = new DateTime('-2 month', new DateTimeZone('UTC'));
+        $stmt->bindValue('lastUpdated', $lastUpdated->format('Y-m-d H:i:s'));
 
-        return $stmt->fetchAll();
+        $result = $stmt->executeQuery();
+
+        return $result->fetchAllAssociative();
     }
 
     /**
@@ -125,20 +134,21 @@ class RatingsUpdater
         $stmt->bindValue('rating', (int)$boxer['rating'], ParameterType::INTEGER);
         $stmt->bindValue('points', (int)$boxer['points'], ParameterType::INTEGER);
 
-        return $stmt->execute();
+        $rowCount = $stmt->executeStatement();
+
+        return $rowCount >= 0;
     }
 
     /**
      * @param array $boxerIds
      * @param int $divisionId
-     * @return bool
      * @throws DBALException
      */
-    private function cleanupRatings(array $boxerIds, int $divisionId): bool
+    private function cleanupRatings(array $boxerIds, int $divisionId): void
     {
         $delete = 'DELETE FROM `rating` WHERE `boxer_id` NOT IN (?) AND `division_id` = ?';
 
-        return (bool)$this->connection->executeUpdate($delete,
+        $this->connection->executeStatement($delete,
             [$boxerIds, $divisionId],
             [Connection::PARAM_INT_ARRAY, ParameterType::INTEGER]
         );
@@ -153,6 +163,6 @@ class RatingsUpdater
     {
         $delete = 'DELETE FROM `rating` WHERE `division_id` = ?';
 
-        return (bool)$this->connection->executeUpdate($delete, [$divisionId]);
+        return (bool)$this->connection->executeStatement($delete, [$divisionId]);
     }
 }

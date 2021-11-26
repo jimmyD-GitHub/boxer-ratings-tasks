@@ -3,9 +3,10 @@
 namespace App\Tests\Integration\Service;
 
 use App\Entity\Division;
+use Doctrine\DBAL\Connection;
 use App\Service\RatingsUpdater;
 use App\Service\ServiceException;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase as TestCase;
 
 class RatingsUpdaterTest extends TestCase
@@ -25,7 +26,7 @@ class RatingsUpdaterTest extends TestCase
     }
 
     /**
-     * @throws ServiceException
+     * @throws ServiceException|DBALDriverException
      */
     public function testRatingsUpdate(): void
     {
